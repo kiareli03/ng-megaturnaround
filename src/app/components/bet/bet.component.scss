@@ -1,0 +1,19 @@
+.bet {
+  display: flex;
+  justify-content: space-between;
+
+  .avatar {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    margin-right: 10px;
+  }
+
+  .numbers {
+    display: flex;
+    justify-content: space-evenly;
+    gap: 2px;
+    margin-right: 10px;
+    flex: 1;
+  }
+}

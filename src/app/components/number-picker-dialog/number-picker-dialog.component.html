@@ -1,9 +1,9 @@
-<h2 mat-dialog-title>Escolha um número</h2>
+<h2 mat-dialog-title>{{ !!data.selectedNumber ? 'Altere ' + data.selectedNumber + ' por:'  : 'Escolha um número:' }}</h2>
 <mat-dialog-content>
   <div class="list">
     @for (numberToPick of numbersToPick(); track numberToPick.number) { 
       <button mat-button [disabled]="numberToPick.disabled" (click)="selectNumber(numberToPick.number)">
-        {{ numberToPick.label }}
+        {{ numberToPick.number | padStart:2:'0' }}
       </button>
     }
   </div>

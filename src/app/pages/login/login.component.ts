@@ -16,9 +16,4 @@ export class LoginComponent {
     await this.authService.login();
     this.router.navigateByUrl('/');
   }
-
-  async logout() {
-    await this.authService.logout();
-    this.router.navigateByUrl('/login');
-  }
 }

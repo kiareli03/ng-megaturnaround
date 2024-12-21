@@ -15,7 +15,7 @@ export class AuthService {
         email: doc.id, 
         admin: doc.data()['admin'], 
         bets: doc.data()['bets'],
-        avatarUrl: user.photoURL!,
+        avatarUrl: user.photoURL || '',
       } satisfies User) : null),
     );
   }

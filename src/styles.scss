@@ -19,5 +19,18 @@ html, body { height: 100%; }
 body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
 
 :root {
+  --mat-toolbar-container-background-color: var(--mat-sys-inverse-primary);
+  // --mdc-filled-button-container-color: var(--mat-sys-inverse-primary);
   --mat-dialog-content-padding: 10px;
+  --mat-filled-button-horizontal-padding: 10px;
+  --mat-outlined-button-horizontal-padding: 10px;
+  --mat-text-button-horizontal-padding: 10px;
+}
+
+.mdc-button {
+  min-width: 40px !important;
+
+  .mat-mdc-outlined-button {
+    min-width: 40px !important;
+  }
 }

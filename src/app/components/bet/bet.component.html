@@ -1,0 +1,23 @@
+<div class="bet">
+  <img class="avatar" [src]="bet().userAvatarUrl" alt="Avatar image of bet Owner" />
+
+  <div class="numbers">
+    @for (number of bet().numbers; track $index) {
+      @if (number) {
+        <button mat-stroked-button (click)="openNumberPickerDialog(bet(), number)">
+          {{ number | padStart:2:'0' }}
+        </button>
+      } @else {
+        <button mat-stroked-button (click)="openNumberPickerDialog(bet(), number)"></button>
+      }
+    }
+  </div>
+
+  <div class="actions">
+    <button mat-icon-button (click)="random()">
+      @if (bet().userEmail) {
+        <mat-icon>autorenew</mat-icon>
+      }
+    </button>
+    </div>
+</div>

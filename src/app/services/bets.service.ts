@@ -13,6 +13,7 @@ export class BetsService {
     return collectionData(this.collectionRef, { idField: 'id' }).pipe(
       map((bets: any[]) => bets.map(bet => ({
         ...bet,
+        numbers: Array.from({ length: 6 }).map((_, i) => bet.numbers[i] || 0),
         createdAt: bet.createdAt?.toDate() || new Date(),
         updatedAt: bet.updatedAt?.toDate() || new Date(),
       })) as Bet[])

@@ -1,23 +1,24 @@
-<p>bets works!</p>
-<button (click)="createBet()"> Create Bet </button>
+<app-header />
 
-@if (!isLoading()) {
-    @for (bet of bets(); track $index) {
-        <p (click)="deleteBet(bet.id)">{{bet.userEmail}}</p>
-        <p>{{getValid(bet.numbers) ? 'ok' : 'nok'}}</p>
+<main>
+    <section>
+        <p>Resultado</p>
+    </section>
+    <app-bet [bet]="winnerBet" [disabled]="true" />
+
+    <section>
+        <p>Apostas restantes: {{ betsLeft() }} / {{ betsTotal() }}</p>
+        <button mat-button (click)="createBet()">Criar Bilhete</button>
+    </section>
     
-        <img class="avatar" [src]="bet.userAvatarUrl" alt="Avatar image of bet Owner" />
-    
-        <div class="numbers">
-            @for (number of bet.numbers; track $index) {
-                <div class="number" (click)="openNumberPickerDialog(bet, number)">
-                    @if (number) {
-                        <span>{{number}}</span>
-                    }
-                </div>
-            }
-        </div>
+    @if (!isLoading()) {
+        @for (bet of sortedBets(); track $index) {
+            <app-bet [bet]="bet" 
+                [disabled]="!isBetOwner(bet.userEmail)" 
+                (update)="updateBet($event)"
+            />
+        }
+    } @else {
+        <p>Carregando...</p>
     }
-} @else {
-    <p>Carregando...</p>
-}
+</main>

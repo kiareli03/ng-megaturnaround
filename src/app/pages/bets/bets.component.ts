@@ -1,15 +1,16 @@
-import { Component, computed, effect, inject, signal } from '@angular/core';
+import { Component, computed, effect, inject } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
-import { BetsService } from '../../services/bets.service';
-import { Bet, CreateBetDTO } from '../../interfaces/bet';
-import { AuthService } from '../../services/auth.service';
 import { MatDialog } from '@angular/material/dialog';
-import { NumberPickerDialogComponent } from '../../components/number-picker-dialog/number-picker-dialog.component';
-import { map } from 'rxjs';
-// import { User } from '../../interfaces/user';
+import { MatButtonModule } from '@angular/material/button';
+import { BetsService } from '../../services/bets.service';
+import { AuthService } from '../../services/auth.service';
+import { Bet, CreateBetDTO } from '../../interfaces/bet';
+import { HeaderComponent } from '../../components/header/header.component';
+import { BetComponent } from '../../components/bet/bet.component';
 
 @Component({
   selector: 'app-bets',
+  imports: [HeaderComponent, BetComponent, MatButtonModule],
   templateUrl: './bets.component.html',
   styleUrl: './bets.component.scss'
 })
@@ -18,51 +19,51 @@ export class BetsComponent {
   private readonly authService = inject(AuthService);
   private readonly dialog = inject(MatDialog);
 
-  loggedUser = toSignal(this.authService.loggedUser$);
-  bets = toSignal(this.betsService.getBets().pipe(map(bets => this.sortBets(bets))));
+  private loggedUser = toSignal(this.authService.loggedUser$);
+  private bets = toSignal(this.betsService.getBets());
+  private myBets = computed(() => this.bets()?.filter(bet => bet.userEmail === this.loggedUser()?.email) || []);
+  private otherBets = computed(() => this.bets()?.filter(bet => bet.userEmail !== this.loggedUser()?.email) || []);
+
   isLoading = computed(() => !this.bets());
+  sortedBets = computed(() => ([...this.myBets(), ...this.otherBets()]));  
+  betsTotal = computed(() => this.loggedUser()?.bets || 0);
+  betsLeft = computed(() => this.betsTotal() - this.myBets().length);
+
+  winnerBet: Bet = {
+    createdAt: new Date(),
+    updatedAt: new Date(),
+    id: 'winner',
+    numbers: [0, 0, 0, 0, 0, 0],
+    userAvatarUrl: 'result.jpg',
+    userEmail: '',
+  }
+
+  isBetOwner(betUserEmail: string): boolean {
+    return betUserEmail === this.loggedUser()?.email;
+  }
 
   getValid(numbers: number[]): boolean {
     return numbers.every(n => n);
   }
 
-  openNumberPickerDialog(bet: Bet, selectedNumber: number): void {
-    const dialogRef = this.dialog.open(NumberPickerDialogComponent, {
-      data: { selectedNumber, selectedNumbers: bet.numbers },
-    });
-
-    dialogRef.afterClosed().subscribe(chosenNumber => {
-      if (!chosenNumber) return;
-
-      const numbers: number[] = [...bet.numbers.filter(n => n && n !== selectedNumber), chosenNumber].sort((a, b) => a - b);
-      numbers.push(0, 0, 0, 0, 0, 0);
-      const betToUpdate: Bet = { ...bet, numbers: numbers.slice(0, 6) };
-      this.betsService.updateBet(betToUpdate);
-    });
-  }
-
   createBet() {
-    const {  avatarUrl, email } = this.loggedUser()!;
+    const user = this.loggedUser();
+    if (!user) return;
 
     const betToCreate: CreateBetDTO = {
       numbers: [],
-      userEmail: email,
-      userAvatarUrl: avatarUrl,
+      userEmail: user.email,
+      userAvatarUrl: user.avatarUrl,
     };
     this.betsService.createBet(betToCreate);
+  }
+
+  updateBet(betToUpdate: Bet) {
+    this.betsService.updateBet(betToUpdate);
   }
 
   deleteBet(id: string) {
     console.log(id)
     this.betsService.deleteBet(id);
   }
-
-  private sortBets(bets: Bet[]): Bet[] {
-    const { email } = this.loggedUser()!;
-    return [
-      ...bets.filter(bet => bet.userEmail === email), 
-      ...bets.filter(bet => bet.userEmail !== email)
-    ];
-  }
-
 }
