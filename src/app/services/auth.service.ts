@@ -7,17 +7,16 @@ import { User } from '../interfaces/user';
 @Injectable({ providedIn: 'root' })
 export class AuthService {
   private readonly firestore = inject(Firestore);
-  private readonly docRef = (id: string) => doc(this.firestore, 'users', id);
 
   private getUserByEmail(user: FirebaseUser): Observable<User | null> {
-    return from(getDoc(this.docRef(user.email!))).pipe(
-      tap(console.log),
+    return from(getDoc(doc(this.firestore, 'users', user.email!))).pipe(
       first(),
       map(doc => doc.exists() ? ({
         email: doc.id, 
         admin: doc.data()['admin'], 
-        userAvatarUrl: user.photoURL
-      } as User) : null),
+        bets: doc.data()['bets'],
+        avatarUrl: user.photoURL!,
+      } satisfies User) : null),
     );
   }
 

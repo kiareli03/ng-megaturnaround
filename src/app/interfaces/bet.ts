@@ -1,7 +1,7 @@
 export interface Bet {
   id: string;
   numbers: number[];
-  userId: string;
+  userEmail: string;
   userAvatarUrl: string;
   createdAt: Date;
   updatedAt: Date;

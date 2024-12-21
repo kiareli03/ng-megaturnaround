@@ -3,7 +3,7 @@
 
 @if (!isLoading()) {
     @for (bet of bets(); track $index) {
-        <p (click)="deleteBet(bet.id)">{{bet.userId}}</p>
+        <p (click)="deleteBet(bet.id)">{{bet.userEmail}}</p>
         <p>{{getValid(bet.numbers) ? 'ok' : 'nok'}}</p>
     
         <img class="avatar" [src]="bet.userAvatarUrl" alt="Avatar image of bet Owner" />

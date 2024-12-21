@@ -1,4 +1,4 @@
-import { Component, computed, inject, signal } from '@angular/core';
+import { Component, computed, effect, inject, signal } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { BetsService } from '../../services/bets.service';
 import { Bet, CreateBetDTO } from '../../interfaces/bet';
@@ -20,7 +20,7 @@ export class BetsComponent {
 
   loggedUser = toSignal(this.authService.loggedUser$);
   bets = toSignal(this.betsService.getBets().pipe(map(bets => this.sortBets(bets))));
-  isLoading = computed(() => !this.bets())
+  isLoading = computed(() => !this.bets());
 
   getValid(numbers: number[]): boolean {
     return numbers.every(n => n);
@@ -42,26 +42,26 @@ export class BetsComponent {
   }
 
   createBet() {
-    // const user = this.loggedUser();
-    // if (!user) return;
+    const {  avatarUrl, email } = this.loggedUser()!;
 
     const betToCreate: CreateBetDTO = {
-      numbers: [0, 0, 0, 0, 0, 0],
-      userId: 'r.paivabr@gmail.com',
-      userAvatarUrl: 'https://lh3.googleusercontent.com/a/ACg8ocLMkthZIxmBkc9AQAahCU8zCQBi4cv4Z6j70-Eb01PhUcWqDHR9vQ=s96-c',
-      // userAvatarUrl: user.userAvatarUrl
+      numbers: [],
+      userEmail: email,
+      userAvatarUrl: avatarUrl,
     };
     this.betsService.createBet(betToCreate);
   }
 
   deleteBet(id: string) {
+    console.log(id)
     this.betsService.deleteBet(id);
   }
 
   private sortBets(bets: Bet[]): Bet[] {
+    const { email } = this.loggedUser()!;
     return [
-      ...bets.filter(bet => bet.userId === 'r.paivabr@gmail.com'), 
-      ...bets.filter(bet => bet.userId !== 'r.paivabr@gmail.com')
+      ...bets.filter(bet => bet.userEmail === email), 
+      ...bets.filter(bet => bet.userEmail !== email)
     ];
   }
 
