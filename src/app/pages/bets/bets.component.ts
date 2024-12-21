@@ -1,4 +1,4 @@
-import { Component, inject } from '@angular/core';
+import { Component, computed, inject, signal } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { BetsService } from '../../services/bets.service';
 import { Bet, CreateBetDTO } from '../../interfaces/bet';
@@ -19,7 +19,8 @@ export class BetsComponent {
   private readonly dialog = inject(MatDialog);
 
   loggedUser = toSignal(this.authService.loggedUser$);
-  bets = toSignal(this.betsService.getBets().pipe(map(bets => this.sortBets(bets))), { initialValue: [] });
+  bets = toSignal(this.betsService.getBets().pipe(map(bets => this.sortBets(bets))));
+  isLoading = computed(() => !this.bets())
 
   getValid(numbers: number[]): boolean {
     return numbers.every(n => n);
@@ -46,7 +47,7 @@ export class BetsComponent {
 
     const betToCreate: CreateBetDTO = {
       numbers: [0, 0, 0, 0, 0, 0],
-      userId: 'matsushitakoiti@gmail.com',
+      userId: 'r.paivabr@gmail.com',
       userAvatarUrl: 'https://lh3.googleusercontent.com/a/ACg8ocLMkthZIxmBkc9AQAahCU8zCQBi4cv4Z6j70-Eb01PhUcWqDHR9vQ=s96-c',
       // userAvatarUrl: user.userAvatarUrl
     };

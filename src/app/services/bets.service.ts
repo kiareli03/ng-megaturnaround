@@ -1,6 +1,6 @@
 import { inject, Injectable } from '@angular/core';
 import { addDoc, collection, collectionData, deleteDoc, doc, Firestore, serverTimestamp, updateDoc } from '@angular/fire/firestore';
-import { map, Observable, tap } from 'rxjs';
+import { map, Observable } from 'rxjs';
 import { Bet, CreateBetDTO } from '../interfaces/bet';
 
 @Injectable({ providedIn: 'root' })
@@ -11,7 +11,6 @@ export class BetsService {
 
   getBets(): Observable<Bet[]> {
     return collectionData(this.collectionRef, { idField: 'id' }).pipe(
-      tap(console.log),
       map((bets: any[]) => bets.map(bet => ({
         ...bet,
         createdAt: bet.createdAt?.toDate() || new Date(),
@@ -34,4 +33,3 @@ export class BetsService {
     deleteDoc(this.docRef(id));
   }
 }
-

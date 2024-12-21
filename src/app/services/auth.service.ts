@@ -1,7 +1,7 @@
 import { inject, Injectable } from '@angular/core';
 import { doc, Firestore, getDoc } from '@angular/fire/firestore';
 import { Auth, GoogleAuthProvider, signInWithPopup, UserCredential, authState, signOut, User as FirebaseUser } from '@angular/fire/auth';
-import { first, from, map, Observable, of, switchMap } from 'rxjs';
+import { first, from, map, Observable, of, switchMap, tap } from 'rxjs';
 import { User } from '../interfaces/user';
 
 @Injectable({ providedIn: 'root' })
@@ -11,6 +11,7 @@ export class AuthService {
 
   private getUserByEmail(user: FirebaseUser): Observable<User | null> {
     return from(getDoc(this.docRef(user.email!))).pipe(
+      tap(console.log),
       first(),
       map(doc => doc.exists() ? ({
         email: doc.id, 
@@ -37,3 +38,5 @@ export class AuthService {
     return signOut(this.auth);
   }
 }
+
+
