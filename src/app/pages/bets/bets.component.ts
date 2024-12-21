@@ -47,6 +47,8 @@ export class BetsComponent {
   }
 
   createBet() {
+    if (!this.betsLeft()) return;
+    
     const user = this.loggedUser();
     if (!user) return;
 
@@ -63,7 +65,6 @@ export class BetsComponent {
   }
 
   deleteBet(id: string) {
-    console.log(id)
     this.betsService.deleteBet(id);
   }
 }

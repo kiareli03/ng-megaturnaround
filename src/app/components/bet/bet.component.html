@@ -1,10 +1,10 @@
 <div class="bet">
-  <img class="avatar" [src]="bet().userAvatarUrl" alt="Avatar image of bet Owner" />
+  <img class="avatar" [src]="bet().userAvatarUrl" alt="Avatar image of bet Owner" (click)="deleteBet(bet().id)" />
 
   <div class="numbers">
     @for (number of bet().numbers; track $index) {
       @if (number) {
-        <button mat-stroked-button (click)="openNumberPickerDialog(bet(), number)">
+        <button mat-flat-button (click)="openNumberPickerDialog(bet(), number)">
           {{ number | padStart:2:'0' }}
         </button>
       } @else {

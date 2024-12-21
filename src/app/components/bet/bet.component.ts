@@ -18,6 +18,7 @@ export class BetComponent {
   bet = input.required<Bet>();
   disabled = input(true);
   update = output<Bet>();
+  remove = output<string>();
 
   openNumberPickerDialog(bet: Bet, selectedNumber: number): void {
     if (this.disabled()) return;
@@ -45,5 +46,11 @@ export class BetComponent {
 
     const betToUpdate: Bet = { ...bet, numbers };
     this.update.emit(betToUpdate);
+  }
+
+  deleteBet(id: string) {
+    if (this.disabled()) return;
+    
+    this.remove.emit(id);
   }
 }

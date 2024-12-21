@@ -8,7 +8,7 @@
 
     <section>
         <p>Apostas restantes: {{ betsLeft() }} / {{ betsTotal() }}</p>
-        <button mat-button (click)="createBet()">Criar Bilhete</button>
+        <button mat-button (click)="createBet()" [disabled]="!betsLeft()">Criar Bilhete</button>
     </section>
     
     @if (!isLoading()) {
@@ -16,6 +16,7 @@
             <app-bet [bet]="bet" 
                 [disabled]="!isBetOwner(bet.userEmail)" 
                 (update)="updateBet($event)"
+                (remove)="deleteBet($event)"
             />
         }
     } @else {
