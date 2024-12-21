@@ -16,7 +16,6 @@ const firebaseConfig = {
   appId: "1:990177132967:web:c197602b3ad97e8af37682"
 };
 
-
 export const appConfig: ApplicationConfig = {
   providers: [
     provideZoneChangeDetection({ eventCoalescing: true }),

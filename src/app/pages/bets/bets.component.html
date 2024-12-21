@@ -1,14 +1,19 @@
 <p>bets works!</p>
-
 <button (click)="createBet()"> Create Bet </button>
 
-@for ( bet of bets(); track $index) {
+@for (bet of bets(); track $index) {
     <p>{{bet.userId}}</p>
-    <!-- <p>{{bet.createdAt | date}}</p> -->
+    <p>{{getValid(bet.numbers) ? 'ok' : 'nok'}}</p>
 
-<img class="avatar" [src]="bet.userAvatarUrl" alt="Avatar image of bet Owner"/>
+    <img class="avatar" [src]="bet.userAvatarUrl" alt="Avatar image of bet Owner" />
 
-@for (number of bet.numbers; track $index) {
-    <span>{{number}}</span>
-}    
+    <div class="numbers">
+        @for (number of bet.numbers; track $index) {
+            <div class="number" (click)="openNumberPickerDialog(bet, number)">
+                @if (number) {
+                    <span>{{number}}</span>
+                }
+            </div>
+        }
+    </div>
 }

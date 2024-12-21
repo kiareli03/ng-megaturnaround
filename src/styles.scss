@@ -17,3 +17,7 @@ html {
 
 html, body { height: 100%; }
 body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
+
+:root {
+  --mat-dialog-content-padding: 10px;
+}
