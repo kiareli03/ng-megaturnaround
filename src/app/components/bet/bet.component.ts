@@ -4,7 +4,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { PadStartPipe } from '../../pipes/pad-start.pipe';
 import { Bet } from '../../interfaces/bet';
 import { MatDialog } from '@angular/material/dialog';
-import { NumberPickerDialogComponent } from '../number-picker-dialog/number-picker-dialog.component';
+import { NumberPickerDialogComponent, NumberPickerDialogData } from '../number-picker-dialog/number-picker-dialog.component';
 
 @Component({
   selector: 'app-bet',
@@ -18,14 +18,12 @@ export class BetComponent {
   bet = input.required<Bet>();
   disabled = input(true);
   update = output<Bet>();
-  remove = output<string>();
 
   openNumberPickerDialog(bet: Bet, selectedNumber: number): void {
     if (this.disabled()) return;
 
-    const dialogRef = this.dialog.open(NumberPickerDialogComponent, {
-      data: { selectedNumber, selectedNumbers: bet.numbers },
-    });
+    const data: NumberPickerDialogData = { selectedNumber, selectedNumbers: bet.numbers };
+    const dialogRef = this.dialog.open(NumberPickerDialogComponent, { data });
 
     dialogRef.afterClosed().subscribe(chosenNumber => {
       if (!chosenNumber) return;
@@ -46,11 +44,5 @@ export class BetComponent {
 
     const betToUpdate: Bet = { ...bet, numbers };
     this.update.emit(betToUpdate);
-  }
-
-  deleteBet(id: string) {
-    if (this.disabled()) return;
-    
-    this.remove.emit(id);
   }
 }

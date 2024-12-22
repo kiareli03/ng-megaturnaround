@@ -1,0 +1,19 @@
+main {
+  background-color: var(--mat-sys-inverse-primary);
+  height: 100dvh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 50px;
+}
+
+.logo {
+  color: #1a1b1f;
+  font-family: Roboto;
+  font-size: 22px;
+  font-weight: 400;
+  height: 28px;
+  letter-spacing: normal;
+  line-height: 28px;
+}

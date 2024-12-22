@@ -8,6 +8,11 @@ interface NumberToPick {
   disabled: boolean;
 }
 
+export interface NumberPickerDialogData {
+  selectedNumber: number;
+  selectedNumbers: number[];
+}
+
 @Component({
   selector: 'app-number-picker-dialog',
   imports: [
@@ -21,7 +26,7 @@ interface NumberToPick {
 })
 export class NumberPickerDialogComponent {
   readonly dialogRef = inject(MatDialogRef<NumberPickerDialogComponent>);
-  readonly data = inject<{ selectedNumber: number, selectedNumbers: number[] }>(MAT_DIALOG_DATA);
+  readonly data = inject<NumberPickerDialogData>(MAT_DIALOG_DATA);
   numbersToPick = signal<NumberToPick[]>(Array.from({ length: 60 }).map((_, i) => (i + 1)).map(number => ({
     number,
     disabled: this.data.selectedNumbers.includes(number)

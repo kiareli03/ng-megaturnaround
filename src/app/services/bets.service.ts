@@ -16,7 +16,8 @@ export class BetsService {
         numbers: Array.from({ length: 6 }).map((_, i) => bet.numbers[i] || 0),
         createdAt: bet.createdAt?.toDate() || new Date(),
         updatedAt: bet.updatedAt?.toDate() || new Date(),
-      })) as Bet[])
+      })) as Bet[]),
+      map((bets: Bet[]) => bets.sort((a, b) => b.createdAt.getTime() - a.createdAt.getTime())),
     );
   }
 

@@ -2,24 +2,11 @@
 
 <main>
     <section>
-        <p>Resultado</p>
-    </section>
-    <app-bet [bet]="winnerBet" [disabled]="true" />
-
-    <section>
         <p>Apostas restantes: {{ betsLeft() }} / {{ betsTotal() }}</p>
         <button mat-button (click)="createBet()" [disabled]="!betsLeft()">Criar Bilhete</button>
     </section>
     
-    @if (!isLoading()) {
-        @for (bet of sortedBets(); track $index) {
-            <app-bet [bet]="bet" 
-                [disabled]="!isBetOwner(bet.userEmail)" 
-                (update)="updateBet($event)"
-                (remove)="deleteBet($event)"
-            />
-        }
-    } @else {
-        <p>Carregando...</p>
+    @for (bet of sortedBets(); track $index) {
+        <app-bet [bet]="bet" [disabled]="!isBetOwner(bet.userEmail)" (update)="updateBet($event)" />
     }
 </main>

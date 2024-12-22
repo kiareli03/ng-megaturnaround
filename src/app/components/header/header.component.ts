@@ -3,7 +3,8 @@ import { Router } from '@angular/router';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { AuthService } from '../../services/auth.service';
 import { toSignal } from '@angular/core/rxjs-interop';
-
+import { MatDialog } from '@angular/material/dialog';
+import { AlertModalComponent, AlertModalData } from '../alert-modal/alert-modal.component';
 
 @Component({
   selector: 'app-header',
@@ -14,8 +15,21 @@ import { toSignal } from '@angular/core/rxjs-interop';
 export class HeaderComponent {
   private readonly authService = inject(AuthService);
   private readonly router = inject(Router);
+  private readonly dialog = inject(MatDialog);
+
   loggedUser = toSignal(this.authService.loggedUser$);
   avatarUrl = computed(() => this.loggedUser()?.avatarUrl || '');
+
+  openLogoutModal(): void {
+    const data: AlertModalData = { title: 'Logout', message: 'Tem certeza que quer sair?' };
+    const dialogRef = this.dialog.open(AlertModalComponent, { data, disableClose: true });
+
+    dialogRef.afterClosed().subscribe(confirm => {
+      if (!confirm) return;
+
+      this.logout();
+    });
+  }
 
   async logout() {
     await this.authService.logout();
