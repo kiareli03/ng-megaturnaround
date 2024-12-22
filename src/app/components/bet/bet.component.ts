@@ -50,9 +50,11 @@ export class BetComponent {
   private random() {
     if (this.disabled()) return;
 
+    const uniqueNumbers = new Set<number>();
+    while (uniqueNumbers.size < 6) uniqueNumbers.add(Math.ceil(Math.random() * 60));
+
     const bet = this.bet();
-    const numbers: number[] = bet.numbers.map(n => Math.ceil(Math.random() * 60)).sort((a, b) => a - b);
-    console.log(numbers);    
+    const numbers = [...uniqueNumbers].sort((a, b) => a - b);
 
     const betToUpdate: Bet = { ...bet, numbers };
     this.update.emit(betToUpdate);
