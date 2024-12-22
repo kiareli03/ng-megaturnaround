@@ -5,6 +5,7 @@ import { PadStartPipe } from '../../pipes/pad-start.pipe';
 import { Bet } from '../../interfaces/bet';
 import { MatDialog } from '@angular/material/dialog';
 import { NumberPickerDialogComponent, NumberPickerDialogData } from '../number-picker-dialog/number-picker-dialog.component';
+import { AlertModalComponent, AlertModalData } from '../alert-modal/alert-modal.component';
 
 @Component({
   selector: 'app-bet',
@@ -34,8 +35,19 @@ export class BetComponent {
       this.update.emit(betToUpdate);
     });
   }
+ 
+  openRandomAlertModal(): void {
+    const data: AlertModalData = { title: 'Gerar números', message: 'Gostaria de gerar números aleatórios?' };
+    const dialogRef = this.dialog.open(AlertModalComponent, { data, disableClose: true });
 
-  random() {
+    dialogRef.afterClosed().subscribe(confirm => {
+      if (!confirm) return;
+
+      this.random();
+    });
+  }
+
+  private random() {
     if (this.disabled()) return;
 
     const bet = this.bet();

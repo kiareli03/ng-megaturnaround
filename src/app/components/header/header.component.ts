@@ -31,7 +31,7 @@ export class HeaderComponent {
     });
   }
 
-  async logout() {
+  private async logout() {
     await this.authService.logout();
     this.router.navigateByUrl('/login');
   }

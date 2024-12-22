@@ -14,7 +14,7 @@
   </div>
 
   <div class="actions">
-    <button [disabled]="disabled()" mat-icon-button (click)="random()">
+    <button [disabled]="disabled()" mat-icon-button (click)="openRandomAlertModal()">
       @if (bet().userEmail) {
         <mat-icon>autorenew</mat-icon>
       }
