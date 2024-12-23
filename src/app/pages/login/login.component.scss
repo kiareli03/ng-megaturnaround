@@ -6,14 +6,11 @@ main {
   justify-content: center;
   align-items: center;
   gap: 50px;
+  background-image: url('../../../../public/logo.png');
+  background-size: cover;
+  background-position: center center;
 }
 
-.logo {
-  color: #1a1b1f;
-  font-family: Roboto;
-  font-size: 22px;
-  font-weight: 400;
-  height: 28px;
-  letter-spacing: normal;
-  line-height: 28px;
+app-login-button {
+  margin-top: 150px;
 }
