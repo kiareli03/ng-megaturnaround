@@ -1,4 +1,4 @@
-import { Component, computed, inject } from '@angular/core';
+import { Component, computed, effect, inject } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { MatButtonModule } from '@angular/material/button';
 import { BetsService } from '../../services/bets.service';
@@ -20,12 +20,25 @@ export class BetsComponent {
   private loggedUser = toSignal(this.authService.loggedUser$);
   private bets = toSignal(this.betsService.getBets());
   private myBets = computed(() => this.bets()?.filter(bet => bet.userEmail === this.loggedUser()?.email && bet.userAvatarUrl !== 'result.jpg') || []);
-  private otherBets = computed(() => this.bets()?.filter(bet => bet.userEmail !== this.loggedUser()?.email && bet.userAvatarUrl !== 'result.jpg') || []);
+  private otherBets = computed(() => this.bets()?.filter(bet => bet.userAvatarUrl !== 'result.jpg') || []);
   winnerBet = computed(() => this.bets()?.find(bet => bet.userAvatarUrl === 'result.jpg'));
+
+  sortedByMatchedBets = computed(() => {
+    const winner = this.winnerBet();
+    if (!winner) return this.otherBets();
+    return this.otherBets().map(bet => {
+      const matchedNumbers = bet.numbers.map(number => winner.numbers.includes(number))
+      return {...bet, matchedNumbers};
+    }).sort((a, b) => b.matchedNumbers.filter(Boolean).length - a.matchedNumbers.filter(Boolean).length)
+  })
+
+  eff = effect(() => {
+    console.log(this.sortedByMatchedBets())
+  });
 
   isAdmin = computed(() => this.loggedUser()?.admin || false);
   isLoading = computed(() => !this.bets() || !this.loggedUser());
-  sortedBets = computed(() => ([...this.myBets(), ...this.otherBets()]));  
+  // sortedBets = computed(() => ([...this.myBets(), ...this.otherBets()]));  
   betsTotal = computed(() => this.loggedUser()?.bets || 0);
   betsLeft = computed(() => this.betsTotal() - this.myBets().length);
 
@@ -52,7 +65,8 @@ export class BetsComponent {
   }
 
   updateBet(betToUpdate: Bet) {
-    this.betsService.updateBet(betToUpdate);
+    const { matchedNumbers, ...bet } = betToUpdate
+    this.betsService.updateBet(bet);
   }
 
 }

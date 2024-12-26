@@ -4,7 +4,7 @@
   <div class="numbers">
     @for (number of bet().numbers; track $index) {
       @if (number) {
-        <button [disabled]="disabled()" mat-flat-button (click)="openNumberPickerDialog(bet(), number)">
+        <button [class.match]="bet().matchedNumbers?.[$index]" [class.winner]="bet().userAvatarUrl === 'result.jpg'" [disabled]="disabled()" mat-flat-button (click)="openNumberPickerDialog(bet(), number)">
           {{ number ? (number | padStart:2:'0') : '' }}
         </button>
       } @else {
@@ -15,7 +15,7 @@
 
   <div class="actions">
     <button [disabled]="disabled()" mat-icon-button (click)="openRandomAlertModal()">
-      @if (bet().userEmail) {
+      @if (bet().userEmail && bet().userAvatarUrl !== 'result.jpg') {
         <mat-icon>autorenew</mat-icon>
       }
     </button>

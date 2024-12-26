@@ -11,13 +11,14 @@ export class BetsService {
 
   getBets(): Observable<Bet[]> {
     return collectionData(this.collectionRef, { idField: 'id' }).pipe(
-      tap(bets => console.log(bets)),
       map((bets: any[]) => bets.map(bet => ({
         ...bet,
         numbers: Array.from({ length: 6 }).map((_, i) => bet.numbers[i] || 0),
+        matchedNumbers: Array.from({ length: 6 }).map(() => false),
         createdAt: bet.createdAt?.toDate() || new Date(),
         updatedAt: bet.updatedAt?.toDate() || new Date(),
       })) as Bet[]),
+      // tap(bets => console.log(bets)),
       map((bets: Bet[]) => bets.sort((a, b) => b.createdAt.getTime() - a.createdAt.getTime())),
     );
   }

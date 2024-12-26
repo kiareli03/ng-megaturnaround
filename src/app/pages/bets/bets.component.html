@@ -1,9 +1,7 @@
 <app-header />
 
 <main>
-    @if (isAdmin() && winnerBet()) {
-        <app-bet [bet]="winnerBet()!" [disabled]="false" (update)="updateBet($event)" />
-    }
+    <app-bet [bet]="winnerBet()!" [disabled]="!isAdmin()" (update)="updateBet($event)" />
 
     @if(!isLoading()) {
         <section>
@@ -11,7 +9,7 @@
             <button mat-button (click)="createBet()" [disabled]="!betsLeft()">Criar Bilhete</button>
         </section>
         
-        @for (bet of sortedBets(); track $index) {
+        @for (bet of sortedByMatchedBets(); track $index) {
             <app-bet [bet]="bet" [disabled]="!isBetOwnerAndNotDone(bet.userEmail)" (update)="updateBet($event)" />
         }
     }
