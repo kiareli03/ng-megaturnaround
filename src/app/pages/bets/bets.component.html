@@ -1,6 +1,10 @@
 <app-header />
 
 <main>
+    @if (isAdmin()) {
+        <p>É admin</p>
+    }
+
     @if(!isLoading()) {
         <section>
             <p>Apostas restantes: {{ betsLeft() }} / {{ betsTotal() }}</p>
@@ -8,7 +12,7 @@
         </section>
         
         @for (bet of sortedBets(); track $index) {
-            <app-bet [bet]="bet" [disabled]="!isBetOwner(bet.userEmail)" (update)="updateBet($event)" />
+            <app-bet [bet]="bet" [disabled]="!isBetOwnerAndNotDone(bet.userEmail)" (update)="updateBet($event)" />
         }
     }
 </main>

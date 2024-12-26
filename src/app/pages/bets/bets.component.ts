@@ -22,13 +22,14 @@ export class BetsComponent {
   private myBets = computed(() => this.bets()?.filter(bet => bet.userEmail === this.loggedUser()?.email) || []);
   private otherBets = computed(() => this.bets()?.filter(bet => bet.userEmail !== this.loggedUser()?.email) || []);
 
+  isAdmin = computed(() => this.loggedUser()?.admin || false);
   isLoading = computed(() => !this.bets() || !this.loggedUser());
   sortedBets = computed(() => ([...this.myBets(), ...this.otherBets()]));  
   betsTotal = computed(() => this.loggedUser()?.bets || 0);
   betsLeft = computed(() => this.betsTotal() - this.myBets().length);
 
-  isBetOwner(betUserEmail: string): boolean {
-    return betUserEmail === this.loggedUser()?.email;
+  isBetOwnerAndNotDone(betUserEmail: string): boolean {
+    return betUserEmail === this.loggedUser()?.email && !this.loggedUser()?.done;
   }
 
   createBet() {
