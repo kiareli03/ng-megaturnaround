@@ -1,6 +1,6 @@
 import { inject, Injectable } from '@angular/core';
 import { addDoc, collection, collectionData, deleteDoc, doc, Firestore, serverTimestamp, updateDoc } from '@angular/fire/firestore';
-import { map, Observable } from 'rxjs';
+import { map, Observable, tap } from 'rxjs';
 import { Bet, CreateBetDTO } from '../interfaces/bet';
 
 @Injectable({ providedIn: 'root' })
@@ -11,6 +11,7 @@ export class BetsService {
 
   getBets(): Observable<Bet[]> {
     return collectionData(this.collectionRef, { idField: 'id' }).pipe(
+      tap(bets => console.log(bets)),
       map((bets: any[]) => bets.map(bet => ({
         ...bet,
         numbers: Array.from({ length: 6 }).map((_, i) => bet.numbers[i] || 0),

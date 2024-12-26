@@ -19,8 +19,9 @@ export class BetsComponent {
 
   private loggedUser = toSignal(this.authService.loggedUser$);
   private bets = toSignal(this.betsService.getBets());
-  private myBets = computed(() => this.bets()?.filter(bet => bet.userEmail === this.loggedUser()?.email) || []);
-  private otherBets = computed(() => this.bets()?.filter(bet => bet.userEmail !== this.loggedUser()?.email) || []);
+  private myBets = computed(() => this.bets()?.filter(bet => bet.userEmail === this.loggedUser()?.email && bet.userAvatarUrl !== 'result.jpg') || []);
+  private otherBets = computed(() => this.bets()?.filter(bet => bet.userEmail !== this.loggedUser()?.email && bet.userAvatarUrl !== 'result.jpg') || []);
+  winnerBet = computed(() => this.bets()?.find(bet => bet.userAvatarUrl === 'result.jpg'));
 
   isAdmin = computed(() => this.loggedUser()?.admin || false);
   isLoading = computed(() => !this.bets() || !this.loggedUser());
@@ -28,8 +29,12 @@ export class BetsComponent {
   betsTotal = computed(() => this.loggedUser()?.bets || 0);
   betsLeft = computed(() => this.betsTotal() - this.myBets().length);
 
+  isBetOwner(betUserEmail: string): boolean {
+    return betUserEmail === this.loggedUser()?.email;
+  }
+
   isBetOwnerAndNotDone(betUserEmail: string): boolean {
-    return betUserEmail === this.loggedUser()?.email && !this.loggedUser()?.done;
+    return this.isBetOwner(betUserEmail) && !this.loggedUser()?.done;
   }
 
   createBet() {
@@ -49,13 +54,6 @@ export class BetsComponent {
   updateBet(betToUpdate: Bet) {
     this.betsService.updateBet(betToUpdate);
   }
+
 }
 
-// winnerBet: Bet = {
-//   createdAt: new Date(),
-//   updatedAt: new Date(),
-//   id: 'winner',
-//   numbers: [0, 0, 0, 0, 0, 0],
-//   userAvatarUrl: 'result.jpg',
-//   userEmail: '',
-// }
